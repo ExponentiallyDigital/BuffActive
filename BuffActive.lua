@@ -1,11 +1,16 @@
 -- BuffActive 0.0.3
 -- Checks and alerts for missing buffs
 -- based on BuffReminder, this version by ArcNineOhNine (Midnight compatible)
+-- requires combat logging to be enabled (to check buff status when in combat)
+
+-- BuffActive 0.0.4
+-- Checks and alerts for missing buffs (full combat coverage)
+-- based on BuffReminder, this version by ArcNineOhNine (Midnight compatible)
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("UNIT_AURA")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")  -- leaving combat
-frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") -- used to see if we are in combat
+frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 -- Use spell IDs instead of names (Midnight-safe)
@@ -15,6 +20,30 @@ local buffsByClass = {
     DRUID   = { 1126 },      -- Mark of the Wild
     PRIEST  = { 21562 },     -- Power Word: Fortitude
 }
+
+-- State tracking (declared FIRST for scope)
+local classBuffID = nil
+local hasBuff = nil  -- nil = unconfirmed
+
+local function SetClassBuff()
+    local _, class = UnitClass("player")
+    local buffs = buffsByClass[class]
+    classBuffID = buffs and buffs[1] or nil
+end
+
+local function UpdateMessage()
+    if UnitIsDeadOrGhost("player") or hasBuff == nil or not classBuffID then
+        HideMessage()
+        return
+    end
+    local info = C_Spell.GetSpellInfo(classBuffID)
+    local name = info and info.name
+    if hasBuff then
+        HideMessage()
+    else
+        ShowMessage("Missing buff: " .. (name or "Unknown"))
+    end
+end
 
 local messageFrame = CreateFrame("Frame", nil, UIParent)
 messageFrame:SetSize(600, 250)
@@ -38,7 +67,6 @@ local function CheckBuffs()
     end
     SetClassBuff()
     if not classBuffID then
-        hasBuff = true
         UpdateMessage()
         return
     end
@@ -58,47 +86,24 @@ local removalEvents = {
     ["SPELL_AURA_BROKEN_SPELL"] = true
 }
 
-local classBuffID = nil
-local hasBuff = false
-local function SetClassBuff()
-    local _, class = UnitClass("player")
-    local buffs = buffsByClass[class]
-    classBuffID = buffs and buffs[1] or nil
-end
-
-local function UpdateMessage()
-    if UnitIsDeadOrGhost("player") then
-        HideMessage()
-        return
-    end
-    if not classBuffID then
-        HideMessage()
-        return
-    end
-    local info = C_Spell.GetSpellInfo(classBuffID)
-    local name = info and info.name
-    if hasBuff then
-        HideMessage()
-    else
-        ShowMessage("Missing buff: " .. (name or "Unknown"))
-    end
-end
-
 frame:SetScript("OnEvent", function(_, event, unit)
     if event == "PLAYER_ENTERING_WORLD" then
         SetClassBuff()
-        CheckBuffs()
+        if not InCombatLockdown() then
+            CheckBuffs()
+        end
     elseif event == "UNIT_AURA" and unit == "player" then
         CheckBuffs()
     elseif event == "PLAYER_REGEN_ENABLED" then
         CheckBuffs()
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+        SetClassBuff()  -- Ensure class ID current (cheap/safe)
         local timestamp, subevent, hideCaster,
               sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
               destGUID, destName, destFlags, destRaidFlags,
               spellID, spellName = CombatLogGetCurrentEventInfo()
         local playerGUID = UnitGUID("player")
-        if destGUID == playerGUID and classBuffID == spellID then
+        if destGUID == playerGUID and classBuffID == spellID and not UnitIsDeadOrGhost("player") then
             if applyEvents[subevent] then
                 hasBuff = true
             elseif removalEvents[subevent] then
