@@ -1,12 +1,11 @@
--- BuffActive 0.0.1
--- Checks for missing buffs when out of combat
--- unable to check when in combat due to midnight changes
--- if you are missing a buff, enter combat and enable that buff, the missing buff message stays until you exit combat :(
--- based on BuffReminder
+-- BuffActive 0.0.2
+-- Checks and alerts for missing buffs
+-- based on BuffReminder, this version by ArcNineOhNine
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("UNIT_AURA")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")  -- leaving combat
+frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") -- used to see if we are in combat
 
 -- Use spell IDs instead of names (Midnight-safe)
 local buffsByClass = {
@@ -67,5 +66,22 @@ frame:SetScript("OnEvent", function(_, event, unit)
     elseif event == "PLAYER_REGEN_ENABLED" then
         -- Leaving combat: aura API is stable again
         CheckBuffs()
+    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+        local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
+              destGUID, destName, destFlags, destRaidFlags, spellID = CombatLogGetCurrentEventInfo()
+        
+        if (subevent == "SPELL_AURA_APPLIED" or subevent == "SPELL_AURA_REFRESH") and
+           destGUID == UnitGUID("player") then
+            local _, class = UnitClass("player")
+            local buffs = buffsByClass[class]
+            if buffs then
+                for _, buffID in ipairs(buffs) do
+                    if spellID == buffID then
+                        HideMessage()
+                        return
+                    end
+                end
+            end
+        end
     end
 end)
