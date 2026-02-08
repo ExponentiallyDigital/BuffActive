@@ -1,6 +1,6 @@
--- BuffActive 0.0.2
+-- BuffActive 0.0.3
 -- Checks and alerts for missing buffs
--- based on BuffReminder, this version by ArcNineOhNine
+-- based on BuffReminder, this version by ArcNineOhNine (Midnight compatible)
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("UNIT_AURA")
@@ -60,25 +60,39 @@ local function CheckBuffs()
     HideMessage()
 end
 
+local applyEvents = {
+    ["SPELL_AURA_APPLIED"] = true,
+    ["SPELL_AURA_REFRESH"] = true
+}
+local removalEvents = {
+    ["SPELL_AURA_REMOVED"] = true,
+    ["SPELL_AURA_BROKEN"] = true,
+    ["SPELL_AURA_BROKEN_SPELL"] = true
+}
+
 frame:SetScript("OnEvent", function(_, event, unit)
     if event == "UNIT_AURA" and unit == "player" then
         CheckBuffs()
     elseif event == "PLAYER_REGEN_ENABLED" then
-        -- Leaving combat: aura API is stable again
         CheckBuffs()
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-        local timestamp, subevent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
-              destGUID, destName, destFlags, destRaidFlags, spellID = CombatLogGetCurrentEventInfo()
-        
-        if (subevent == "SPELL_AURA_APPLIED" or subevent == "SPELL_AURA_REFRESH") and
-           destGUID == UnitGUID("player") then
+        local timestamp, subevent, hideCaster,
+              sourceGUID, sourceName, sourceFlags, sourceRaidFlags,
+              destGUID, destName, destFlags, destRaidFlags,
+              spellID, spellName = CombatLogGetCurrentEventInfo()    
+        local playerGUID = UnitGUID("player")
+        if destGUID == playerGUID and not UnitIsDeadOrGhost("player") then
             local _, class = UnitClass("player")
             local buffs = buffsByClass[class]
             if buffs then
                 for _, buffID in ipairs(buffs) do
-                    if spellID == buffID then
-                        HideMessage()
-                        return
+                    if buffID == spellID then
+                        if applyEvents[subevent] then
+                            HideMessage()
+                        elseif removalEvents[subevent] then
+                            ShowMessage("Missing buff: " .. spellName)
+                        end
+                        break
                     end
                 end
             end
