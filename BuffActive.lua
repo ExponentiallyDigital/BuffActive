@@ -37,6 +37,10 @@ local function CheckBuffs()
     if InCombatLockdown() then
         return
     end
+    if UnitIsDeadOrGhost("player") then
+        HideMessage()
+        return
+    end
     local _, class = UnitClass("player")
     local buffs = buffsByClass[class]
     if not buffs then
