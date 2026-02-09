@@ -114,19 +114,17 @@ f:SetScript("OnEvent", function(self, event, addon)
                 UIDropDownMenu_AddButton(info)
             end
         end)
-        -- Set the selected value after a brief delay to ensure dropdown is initialized
-        C_Timer.After(0, function()
-            UIDropDownMenu_SetSelectedValue(dd, initialValue)
-            -- Also set the text to match the selected value
-            local selectedText = ""
-            for _, item in ipairs(items) do
-                if item.value == initialValue then
-                    selectedText = item.text
-                    break
-                end
+        -- Set the selected value immediately
+        UIDropDownMenu_SetSelectedValue(dd, initialValue)
+        -- Also set the text to match the selected value
+        local selectedText = ""
+        for _, item in ipairs(items) do
+            if item.value == initialValue then
+                selectedText = item.text
+                break
             end
-            UIDropDownMenu_SetText(dd, selectedText)
-        end)
+        end
+        UIDropDownMenu_SetText(dd, selectedText)
         return dd
     end
 
@@ -191,7 +189,37 @@ f:SetScript("OnEvent", function(self, event, addon)
     -- When the panel is shown, refresh the status text
     panel:SetScript("OnShow", function()
         if ddCheckFrequency then
+            -- Validate and set the check frequency dropdown
+            local allowedIntervals = {1, 2, 3, 5, 10}
+            local isValidInterval = false
+            for _, interval in ipairs(allowedIntervals) do
+                if BuffActiveDB.checkInterval == interval then
+                    isValidInterval = true
+                    break
+                end
+            end
+            if not isValidInterval then
+                BuffActiveDB.checkInterval = 2  -- Default to 2 seconds
+            end
+            
             UIDropDownMenu_SetSelectedValue(ddCheckFrequency, BuffActiveDB.checkInterval)
+            
+            -- Also set the text to match the selected value
+            local items = {
+                { text = "1 second", value = 1 },
+                { text = "2 seconds (default)", value = 2 },
+                { text = "3 seconds", value = 3 },
+                { text = "5 seconds", value = 5 },
+                { text = "10 seconds", value = 10 },
+            }
+            local selectedText = ""
+            for _, item in ipairs(items) do
+                if item.value == BuffActiveDB.checkInterval then
+                    selectedText = item.text
+                    break
+                end
+            end
+            UIDropDownMenu_SetText(ddCheckFrequency, selectedText)
         end
         if UpdateSpellListDisplay then
             UpdateSpellListDisplay()

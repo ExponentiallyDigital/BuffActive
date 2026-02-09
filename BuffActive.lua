@@ -104,14 +104,40 @@ local function CheckBuffs()
     for _, spellID in ipairs(spellIDs) do
         local spellName = cachedSpellNames[spellID]
         if spellName then
-            -- More efficient aura checking using C_UnitAuras (modern WoW API)
-            local i = 1
+            -- More robust aura checking using C_UnitAuras (modern WoW API)
             local found = false
-            
+
             -- Using GetPlayerAuraBySpellID which is more efficient for checking specific spells
             local auraData = C_UnitAuras.GetPlayerAuraBySpellID(spellID)
             if auraData then
-                found = true
+                -- Additional check: make sure the aura is active (not expired)
+                if not auraData.expires then
+                    -- If no expiration time, assume it's active
+                    found = true
+                elseif auraData.expirationTime and auraData.expirationTime > GetTime() then
+                    -- If expiration time is in the future, it's active
+                    found = true
+                end
+            else
+                -- Fallback: check all auras if the direct lookup failed
+                local i = 1
+                local name, icon, count, debuffType, duration, expirationTime, source, isStealable, 
+                      nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, 
+                      nameplateShowAll, timeMod = UnitAura("player", i, "HELPFUL")
+
+                while name do
+                    if spellId == spellID then
+                        -- Check if the aura is still active
+                        if not expirationTime or expirationTime > GetTime() then
+                            found = true
+                            break
+                        end
+                    end
+                    i = i + 1
+                    name, icon, count, debuffType, duration, expirationTime, source, isStealable, 
+                          nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, 
+                          nameplateShowAll, timeMod = UnitAura("player", i, "HELPFUL")
+                end
             end
 
             if not found then
