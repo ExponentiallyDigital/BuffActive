@@ -11,6 +11,24 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
     if addon ~= "BuffActive" then return end
     
+    -- Ensure saved variables are properly initialized after loading
+    if type(BuffActiveDB) ~= "table" then BuffActiveDB = {} end
+    -- Validate checkInterval to ensure it's one of the allowed values
+    local allowedIntervals = {1, 2, 3, 5, 10}
+    local isValidInterval = false
+    if BuffActiveDB.checkInterval ~= nil then
+        for _, interval in ipairs(allowedIntervals) do
+            if BuffActiveDB.checkInterval == interval then
+                isValidInterval = true
+                break
+            end
+        end
+    end
+    if not isValidInterval then
+        BuffActiveDB.checkInterval = 2  -- Default to 2 seconds
+    end
+    if BuffActiveDB.customSpells == nil then BuffActiveDB.customSpells = {} end
+    
 
     ------------------------------------------------------------
     -- Helper: Get player's class
