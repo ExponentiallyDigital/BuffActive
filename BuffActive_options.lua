@@ -114,7 +114,19 @@ f:SetScript("OnEvent", function(self, event, addon)
                 UIDropDownMenu_AddButton(info)
             end
         end)
-        UIDropDownMenu_SetSelectedValue(dd, initialValue)
+        -- Set the selected value after a brief delay to ensure dropdown is initialized
+        C_Timer.After(0, function()
+            UIDropDownMenu_SetSelectedValue(dd, initialValue)
+            -- Also set the text to match the selected value
+            local selectedText = ""
+            for _, item in ipairs(items) do
+                if item.value == initialValue then
+                    selectedText = item.text
+                    break
+                end
+            end
+            UIDropDownMenu_SetText(dd, selectedText)
+        end)
         return dd
     end
 
