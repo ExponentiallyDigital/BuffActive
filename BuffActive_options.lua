@@ -1,3 +1,11 @@
+-- Define default spells for each class (defined outside event handler to ensure accessibility)
+local defaultSpellsByClass = {
+    WARRIOR = { {id = 6673, name = "Battle Shout"} },      -- Battle Shout
+    MAGE    = { {id = 1459, name = "Arcane Intellect"} },  -- Arcane Intellect
+    DRUID   = { {id = 1126, name = "Mark of the Wild"} },  -- Mark of the Wild
+    PRIEST  = { {id = 21562, name = "Power Word: Fortitude"} }, -- Power Word: Fortitude
+}
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -152,21 +160,12 @@ f:SetScript("OnEvent", function(self, event, addon)
     end
 
     ------------------------------------------------------------
-    -- Helper: Get default spells for current class
-    ------------------------------------------------------------
-    local defaultSpellsByClass = {
-        WARRIOR = { {id = 6673, name = "Battle Shout"} },      -- Battle Shout
-        MAGE    = { {id = 1459, name = "Arcane Intellect"} },  -- Arcane Intellect
-        DRUID   = { {id = 1126, name = "Mark of the Wild"} },  -- Mark of the Wild
-        PRIEST  = { {id = 21562, name = "Power Word: Fortitude"} }, -- Power Word: Fortitude
-    }
-
-    ------------------------------------------------------------
     -- Helper: Get current class default spells
     ------------------------------------------------------------
     local function GetCurrentClassDefaultSpells()
         local class = GetPlayerClass()
-        return defaultSpellsByClass[class] or {}
+        local classSpells = defaultSpellsByClass[class]
+        return classSpells or {}
     end
 
     ------------------------------------------------------------
