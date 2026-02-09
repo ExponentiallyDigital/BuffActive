@@ -35,9 +35,7 @@ f:SetScript("OnEvent", function(self, event, addon)
         if ddCheckFrequency then
             UIDropDownMenu_SetSelectedValue(ddCheckFrequency, BuffActiveDB.checkInterval)
         end
-        if panel.spellListFrame then
-            UpdateSpellListDisplay()
-        end
+        UpdateSpellListDisplay()
     end)
 
     local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
@@ -174,8 +172,13 @@ f:SetScript("OnEvent", function(self, event, addon)
     local function UpdateSpellListDisplay()
         if not panel.spellListFrame then return end
         
+        -- Initialize spellButtons table if it doesn't exist
+        if not panel.spellListFrame.spellButtons then
+            panel.spellListFrame.spellButtons = {}
+        end
+        
         -- Clear existing content
-        for i = 1, #panel.spellListFrame.spellButtons or 0 do
+        for i = 1, #panel.spellListFrame.spellButtons do
             if panel.spellListFrame.spellButtons[i] then
                 panel.spellListFrame.spellButtons[i]:Hide()
             end
@@ -240,7 +243,9 @@ f:SetScript("OnEvent", function(self, event, addon)
         
         -- Hide unused buttons
         for i = #allSpells + 1, #panel.spellListFrame.spellButtons do
-            panel.spellListFrame.spellButtons[i]:Hide()
+            if panel.spellListFrame.spellButtons[i] then
+                panel.spellListFrame.spellButtons[i]:Hide()
+            end
         end
     end
 
