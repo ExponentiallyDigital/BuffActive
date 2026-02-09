@@ -128,32 +128,9 @@ local function CheckBuffs(isForced)
                 end
             end
 
-            -- If direct lookup failed or aura wasn't active, check all player auras
-            if not found then
-                local i = 1
-                local auraData = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
-                
-                while auraData do
-                    if auraData.spellId == spellID then
-                        -- Check if this aura is active
-                        local isActive = true
-                        
-                        -- Check expiration time
-                        if auraData.expirationTime and auraData.expirationTime > 0 then
-                            if auraData.expirationTime <= GetTime() then
-                                isActive = false
-                            end
-                        end
-                        
-                        if isActive then
-                            found = true
-                            break
-                        end
-                    end
-                    i = i + 1
-                    auraData = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
-                end
-            end
+            -- If direct lookup failed or aura wasn't active, we'll rely on the UNIT_AURA event
+            -- The direct lookup should be sufficient for most cases
+            -- The aura data fields might be protected, so we'll skip the manual loop
 
             if not found then
                 ShowMessage("Missing buff: " .. spellName)
