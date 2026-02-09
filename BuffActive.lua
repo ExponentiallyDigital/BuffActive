@@ -1,4 +1,4 @@
--- BuffActive 0.0.6
+-- BuffActive
 -- Midnight-compatible: Out-of-combat buff reminder only
 -- Hides on enter combat, re-checks on exit
 -- based on BuffReminder, this version by ArcNineOhNine
