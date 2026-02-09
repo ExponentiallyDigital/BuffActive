@@ -82,9 +82,11 @@ end
 -- Debounce mechanism to prevent frequent checks
 local lastCheckTime = 0
 
-local function CheckBuffs()
+local function CheckBuffs(isForced)
     local currentTime = GetTime()
-    if currentTime - lastCheckTime < BuffActiveDB.checkInterval then
+    
+    -- Allow forced checks (from UNIT_AURA events) to bypass debounce if needed
+    if not isForced and (currentTime - lastCheckTime < BuffActiveDB.checkInterval) then
         return
     end
     lastCheckTime = currentTime
@@ -107,36 +109,49 @@ local function CheckBuffs()
             -- More robust aura checking using C_UnitAuras (modern WoW API)
             local found = false
 
-            -- Using GetPlayerAuraBySpellID which is more efficient for checking specific spells
+            -- First, try the direct lookup by spell ID
             local auraData = C_UnitAuras.GetPlayerAuraBySpellID(spellID)
             if auraData then
-                -- Additional check: make sure the aura is active (not expired)
-                if not auraData.expires then
-                    -- If no expiration time, assume it's active
-                    found = true
-                elseif auraData.expirationTime and auraData.expirationTime > GetTime() then
-                    -- If expiration time is in the future, it's active
+                -- Check if aura is active - consider multiple factors
+                local isActive = true
+                
+                -- Check if aura has an expiration time and if it's expired
+                if auraData.expirationTime and auraData.expirationTime > 0 then
+                    if auraData.expirationTime <= GetTime() then
+                        isActive = false
+                    end
+                end
+                
+                -- Additional checks could include duration, applications (stacks), etc.
+                if isActive then
                     found = true
                 end
-            else
-                -- Fallback: check all auras if the direct lookup failed
-                local i = 1
-                local name, icon, count, debuffType, duration, expirationTime, source, isStealable, 
-                      nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, 
-                      nameplateShowAll, timeMod = UnitAura("player", i, "HELPFUL")
+            end
 
-                while name do
-                    if spellId == spellID then
-                        -- Check if the aura is still active
-                        if not expirationTime or expirationTime > GetTime() then
+            -- If direct lookup failed or aura wasn't active, check all player auras
+            if not found then
+                local i = 1
+                local auraData = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
+                
+                while auraData do
+                    if auraData.spellId == spellID then
+                        -- Check if this aura is active
+                        local isActive = true
+                        
+                        -- Check expiration time
+                        if auraData.expirationTime and auraData.expirationTime > 0 then
+                            if auraData.expirationTime <= GetTime() then
+                                isActive = false
+                            end
+                        end
+                        
+                        if isActive then
                             found = true
                             break
                         end
                     end
                     i = i + 1
-                    name, icon, count, debuffType, duration, expirationTime, source, isStealable, 
-                          nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, 
-                          nameplateShowAll, timeMod = UnitAura("player", i, "HELPFUL")
+                    auraData = C_UnitAuras.GetAuraDataByIndex("player", i, "HELPFUL")
                 end
             end
 
@@ -155,7 +170,7 @@ AddCustomSpells()
 
 frame:SetScript("OnEvent", function(self, event, unit)
     if event == "UNIT_AURA" and unit == "player" then
-        CheckBuffs()
+        CheckBuffs(true)  -- force check on aura change
     elseif event == "PLAYER_REGEN_ENABLED" then
         CheckBuffs()  -- full check on exit
     elseif event == "PLAYER_REGEN_DISABLED" then
