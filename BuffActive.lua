@@ -104,18 +104,14 @@ local function CheckBuffs()
     for _, spellID in ipairs(spellIDs) do
         local spellName = cachedSpellNames[spellID]
         if spellName then
-            -- More efficient aura checking using UnitAura
+            -- More efficient aura checking using C_UnitAuras (modern WoW API)
             local i = 1
-            local auraName, _, _, _, _, _, _, _, _, _, spellId = UnitAura("player", i)
             local found = false
-
-            while auraName do
-                if spellId == spellID then
-                    found = true
-                    break
-                end
-                i = i + 1
-                auraName, _, _, _, _, _, _, _, _, _, spellId = UnitAura("player", i)
+            
+            -- Using GetPlayerAuraBySpellID which is more efficient for checking specific spells
+            local auraData = C_UnitAuras.GetPlayerAuraBySpellID(spellID)
+            if auraData then
+                found = true
             end
 
             if not found then
