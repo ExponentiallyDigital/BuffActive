@@ -322,6 +322,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 
     ------------------------------------------------------------
+    -- Helper: Pre-populate spell name cache for default spells
+    ------------------------------------------------------------
+    local function PopulateSpellNameCache()
+        for class, spells in pairs(defaultSpellsByClass) do
+            for _, spell in ipairs(spells) do
+                GetSpellName(spell.id) -- This will cache the name
+            end
+        end
+    end
+
+    ------------------------------------------------------------
     -- 1. Dropdown: Check frequency
     ------------------------------------------------------------
     ddCheckFrequency = CreateDropdown(
