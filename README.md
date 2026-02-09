@@ -33,6 +33,8 @@ Blizzard's default UI shows buffs in the top-right corner, but it's easy to miss
 - **Smart event handling:** responds immediately to aura changes without being affected by debounce intervals
 - **Performance optimised:** uses modern WoW APIs and efficient checking mechanisms
 
+![Screenshot: GuildRouter UI](./images/missing-buff.png)
+
 ## Installation
 
 1. Move/copy the `BuffActive` folder to your `_retail_/Interface/AddOns/` directory
@@ -43,6 +45,9 @@ On load/login, the addon will begin monitoring your class buffs automatically.
 ## Configuration
 
 The addon requires no setup by default. It will automatically monitor the appropriate buffs for your class. However, you can customise the behavior through the standard Blizzard addon UI under `<ESCAPE>->Options->Addons->BuffActive`.
+
+UI options:
+![Screenshot: GuildRouter UI](./images/UI-options.png)
 
 Addon options:
 
