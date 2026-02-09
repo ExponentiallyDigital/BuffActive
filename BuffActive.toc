@@ -2,8 +2,9 @@
 ## Title: BuffActive
 ## Notes: On screen reminder for missing class buff
 ## Author: ArcNineOhNine
-## Version: 0.0.5
+## Version: 0.0.6
 ## Category: ArcNineOhNIne
-## SavedVariables:
+## SavedVariables: BuffActiveDB
 
 BuffActive.lua
+BuffActive_options.lua
