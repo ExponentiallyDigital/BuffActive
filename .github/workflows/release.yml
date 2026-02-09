@@ -1,0 +1,55 @@
+name: Package Addon
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run without creating a release"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create addon directory
+        run: |
+          mkdir -p build/BuffActive
+          cp BuffActive.toc build/BuffActive/
+          cp BuffActive.lua build/BuffActive/
+          cp BuffActive_options.lua build/BuffActive/
+          cp LICENSE build/BuffActive/
+
+      - name: Install Pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Convert README.md to HTML (self-contained)
+        run: |
+          pandoc README.md -f gfm -t html -s --self-contained -o build/BuffActive/README.html
+
+      - name: Create ZIP
+        run: |
+          cd build
+          zip -r "BuffActive-${GITHUB_REF_NAME}.zip" BuffActive
+
+      - name: Dry run notice
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        run: echo "Dry run completed — no release was created."
+
+      - name: Upload Release Asset
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/BuffActive-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
