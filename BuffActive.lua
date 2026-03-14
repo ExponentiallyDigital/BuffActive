@@ -105,6 +105,13 @@ local function CheckBuffs(isForced)
 
     for _, spellID in ipairs(spellIDs) do
         local spellName = cachedSpellNames[spellID]
+        if not spellName then
+            local info = C_Spell.GetSpellInfo(spellID)
+            spellName = info and info.name
+            if spellName then
+                cachedSpellNames[spellID] = spellName
+            end
+        end
         if spellName then
             -- More robust aura checking using C_UnitAuras (modern WoW API)
             local found = false
@@ -130,9 +137,9 @@ local function CheckBuffs(isForced)
     HideMessage()
 end
 
--- Initialize spell cache when addon loads
-InitializeSpellCache()
+-- Initialize buffs and spell cache when addon loads
 AddCustomSpells()
+InitializeSpellCache()
 
 frame:SetScript("OnEvent", function(self, event, unit)
     if event == "UNIT_AURA" and unit == "player" then
@@ -142,8 +149,8 @@ frame:SetScript("OnEvent", function(self, event, unit)
     elseif event == "PLAYER_REGEN_DISABLED" then
         HideMessage()  -- hide on enter combat
     elseif event == "PLAYER_ENTERING_WORLD" then
-        InitializeSpellCache() -- Re-initialize cache on world load
         AddCustomSpells()      -- Add custom spells after world load
+        InitializeSpellCache() -- Re-initialize cache on world load
         CheckBuffs()
     end
 end)
