@@ -111,21 +111,10 @@ local function CheckBuffs(isForced)
 
             -- First, try the direct lookup by spell ID
             local auraData = C_UnitAuras.GetPlayerAuraBySpellID(spellID)
-            if auraData then
-                -- Check if aura is active - consider multiple factors
-                local isActive = true
-                
-                -- Check if aura has an expiration time and if it's expired
-                if auraData.expirationTime and auraData.expirationTime > 0 then
-                    if auraData.expirationTime <= GetTime() then
-                        isActive = false
-                    end
-                end
-                
-                -- Additional checks could include duration, applications (stacks), etc.
-                if isActive then
-                    found = true
-                end
+            if auraData and auraData.name then
+                -- Aura exists and has a name, so it's active
+                -- Note: expirationTime=0 means permanent/indefinite aura (like Devotion Aura)
+                found = true
             end
 
             -- If direct lookup failed or aura wasn't active, we'll rely on the UNIT_AURA event
