@@ -55,6 +55,12 @@ Addon options:
 - **Spell Override - Current Class Spells:** Shows the current class's default monitored spells and any custom spells you've added
 - **Add Custom Spell ID:** Allows you to enter additional spell IDs to monitor for your class
 
+## Example: adding "Devotion Aura"
+
+Add spell ID 465 in the <strong style="color: purple;">lower section</strong> of the addon's config section, this checks for the Paladin Devotion aura. You can remove manually added spells by clicking on the <strong style="color: red;">X</strong> in the <strong style="color: purple;">middle section</strong>:
+
+![Screenshot: GuildRouter UI](./images/devotion-aura.png)
+
 ## Command Line Options
 
 BuffActive does not currently provide slash commands. All configuration is done through the addon options UI.
