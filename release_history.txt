@@ -1,3 +1,9 @@
+— 2026-03-16 v0.1.10 TOC bump
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-03-16 Update release_history.txt for v0.1.9
+    release_history.txt | 134 insertions, 0 deletions
+
 — 2026-03-16 v0.1.9 FIX release.yml - switch to current branch step before the commit/push. This will ensure the workflow is on a branch instead of a detached HEAD and allow git push to succeed.
     .github/workflows/release.yml | 14 insertions, 0 deletions
 
