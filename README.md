@@ -104,7 +104,7 @@ Found a bug or want to submit a feature request?
 
 ## Support
 
-This tool is unsupported and provided as-is. Use at your own risk.
+This tool is unsupported and may cause objects in mirrors to be closer than they appear etc. Batteries not included.
 
 ## License
 

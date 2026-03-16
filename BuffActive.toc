@@ -3,7 +3,7 @@
 ## Notes: On screen reminder for missing class buff
 ## Author: ArcNineOhNine
 ## Version: 0.1.5
-## Category: ArcNineOhNIne
+## Category: ArcNineOhNine
 ## SavedVariables: BuffActiveDB
 
 BuffActive.lua
