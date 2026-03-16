@@ -1,0 +1,134 @@
+— 2026-03-16 v0.1.9 FIX release.yml - switch to current branch step before the commit/push. This will ensure the workflow is on a branch instead of a detached HEAD and allow git push to succeed.
+    .github/workflows/release.yml | 14 insertions, 0 deletions
+
+— 2026-03-16 v0.1.8 ADD release_history.txt file auto created by github actions
+    .github/workflows/release.yml | 64 insertions, 8 deletions
+
+— 2026-03-16 v0.1.7 FIX github tag
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-03-16 v0.1.6 bump TOC
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-03-16 v0.1.6 FIX typo in TOC, updated README, moved logos to images folder
+    BuffActive.toc | 1 insertion, 1 deletion
+    README.md | 1 insertion, 1 deletion
+    images/BuffActive-logo-1024x1024.png | added
+    images/BuffActive-logo-400x400.png | added
+
+— 2026-03-14 v0.1.5 release
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-03-14 v0.1.4a ADD: updated docs and screenshot on how to manually add a watched spell
+    BuffActive.toc | 1 insertion, 1 deletion
+    README.md | 6 insertions, 0 deletions
+    images/devotion-aura.png | added
+
+— 2026-03-14 v0.1.4 FIX: manually added spell IDs now working eg devotion aura (spell ID 465): resequenced AddCustomSpell check
+    BuffActive.lua | 10 insertions, 3 deletions
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-03-14 v0.1.3 FIX: devotion aura aded in the addon UI options as spell id 465 should now work
+    BuffActive.lua | 4 insertions, 15 deletions
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-02-09 v0.1.2 FIX:  in combat attempt to compare field ‘spellId’ (a secret value)
+    BuffActive.lua | 3 insertions, 26 deletions
+
+— 2026-02-09 v0.1.1 ADD: updated README with images
+    BuffActive.toc | 1 insertion, 1 deletion
+    README.md | 5 insertions, 0 deletions
+
+— 2026-02-09 ADD: screenshots
+    images/UI-options.png | added
+
+— 2026-02-09 FIX: updated versioning TOC
+    images/missing-buff.png | added
+
+— 2026-02-09 v0.1.0 initial release for automated GitHub packaging, updated README
+    README.md | 7 insertions, 5 deletions
+
+— 2026-02-09 ADD: removed addon name from issue template
+    .github/ISSUE_TEMPLATE/bug_report.md | 5 insertions, 4 deletions
+
+— 2026-02-09 ADD: issue templates
+    .github/ISSUE_TEMPLATE/bug_report.md | 31 insertions, 0 deletions
+    .github/ISSUE_TEMPLATE/feature_request.md | 20 insertions, 0 deletions
+
+— 2026-02-09 Merge branch 'main' of https://github.com/ExponentiallyDigital/BuffActive
+
+— 2026-02-09 ADD: readme.md; license file
+    BuffActive.7z | added
+    BuffActive.lua | 1 insertion, 1 deletion
+    BuffActive.toc | 1 insertion, 1 deletion
+    LICENSE | 674 insertions, 0 deletions
+    README.md | 104 insertions, 0 deletions
+
+— 2026-02-09 ADD automated release packaging on PUSH with new tag
+    .github/workflows/release.yml | 55 insertions, 0 deletions
+
+— 2026-02-09 FIX: detection logic and debounce
+    BuffActive.lua | 38 insertions, 23 deletions
+
+— 2026-02-09 FIX: edge case aura detection
+    BuffActive.lua | 30 insertions, 4 deletions
+    BuffActive_options.lua | 40 insertions, 12 deletions
+
+— 2026-02-09 FIX: drop down value
+    BuffActive_options.lua | 13 insertions, 1 deletion
+
+— 2026-02-09 FIX: default value
+    BuffActive_options.lua | 18 insertions, 0 deletions
+
+— 2026-02-09 FIX: UI options and sequencing
+    BuffActive_options.lua | 131 insertions, 202 deletions
+
+— 2026-02-09 FIX UI sequencing
+    BuffActive_options.lua | 11 insertions, 0 deletions
+
+— 2026-02-09 FIX: ui options
+    BuffActive_options.lua | 179 insertions, 103 deletions
+
+— 2026-02-09 FIX: removed deprecated UnitAura
+    BuffActive.lua | 6 insertions, 10 deletions
+
+— 2026-02-09 FIX: spellbuttons init
+    BuffActive_options.lua | 10 insertions, 5 deletions
+
+— 2026-02-09 FIX: bad argument #1 to 'pairs' (table expected, got nil
+    BuffActive_options.lua | 10 insertions, 11 deletions
+
+— 2026-02-09 v0.0.6 added options UI
+    BuffActive.lua | 42 insertions, 9 deletions
+    BuffActive.toc | 3 insertions, 2 deletions
+    BuffActive_options.lua | 354 insertions, 0 deletions
+
+— 2026-02-09 v0.0.5 optimised for speed and performance
+    BuffActive.lua | 55 insertions, 12 deletions
+    BuffActive.toc | 3 insertions, 3 deletions
+
+— 2026-02-08 v0.0.4 can't check in combat (secret value due to midnight restrictions), regressed to only check out of combat
+    BuffActive.lua | 27 insertions, 72 deletions
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-02-08 FIX: sequencing in code
+    BuffActive.lua | 36 insertions, 31 deletions
+
+— 2026-02-08 FIX: not reminded in combat
+    BuffActive.lua | 47 insertions, 38 deletions
+
+— 2026-02-08 v0.0.3
+    BuffActive.7z | added
+    BuffActive.lua | 25 insertions, 11 deletions
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-02-08 v0.0.2
+    BuffActive.lua | 21 insertions, 5 deletions
+    BuffActive.toc | 1 insertion, 1 deletion
+
+— 2026-02-08 v0.0.1
+    BuffActive.lua | 4 insertions, 0 deletions
+
+— 2026-02-08 v0.0.0
+    BuffActive.lua | 67 insertions, 0 deletions
+    BuffActive.toc | 9 insertions, 0 deletions
