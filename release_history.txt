@@ -1,3 +1,14 @@
+— 2026-03-20 v0.1.11 TOC bump, ADD icon file, UPDATED yml workflow
+    .github/workflows/release.yml | 2 insertions, 0 deletions
+    BuffActive.toc | 3 insertions, 2 deletions
+    README.html | 326 insertions, 0 deletions
+    media/BuffActive-icon.blp | added
+    media/BuffActive-icon.png | added
+    media/BuffActive-logo.png | added
+
+— 2026-03-16 Update release_history.txt for v0.1.10
+    release_history.txt | 6 insertions, 0 deletions
+
 — 2026-03-16 v0.1.10 TOC bump
     BuffActive.toc | 1 insertion, 1 deletion
 
