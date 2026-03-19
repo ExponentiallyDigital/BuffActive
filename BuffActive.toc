@@ -1,9 +1,10 @@
-## Interface: 120000
+## Interface: 120001, 120000
 ## Title: BuffActive
 ## Notes: On screen reminder for missing class buff
 ## Author: ArcNineOhNine
-## Version: 0.1.10
+## Version: 0.1.11
 ## Category: ArcNineOhNine
+## IconTexture: Interface\AddOns\BuffActive\media\BuffActive-icon
 ## SavedVariables: BuffActiveDB
 
 BuffActive.lua
