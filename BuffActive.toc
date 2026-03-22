@@ -2,7 +2,7 @@
 ## Title: BuffActive
 ## Notes: On screen reminder for missing class buff
 ## Author: ArcNineOhNine
-## Version: 0.1.11
+## Version: 0.1.12
 ## Category: ArcNineOhNine
 ## IconTexture: Interface\AddOns\BuffActive\media\BuffActive-icon
 ## SavedVariables: BuffActiveDB

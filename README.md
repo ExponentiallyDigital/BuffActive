@@ -73,6 +73,7 @@ BuffActive does not currently provide slash commands. All configuration is done 
 - **Class-specific:** automatically selects appropriate buffs based on your character class
 - **Combat-aware:** hides during combat and resumes monitoring when out of combat
 - **Performance conscious:** uses efficient API calls and minimal resource usage
+- **Typical RAM used:** 34 KB. That’s ~1,200× less than RareScanner and ~2,600× less than Auctionator. Put another way: BuffActive is the size of a Post‑it note, while RareScanner is a novel and Auctionator is a full encyclopedia volume.
 
 ### Event Handling
 
