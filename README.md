@@ -1,3 +1,5 @@
+2026-04-09 this addon is no longer being developed, please feel free to fork this repo and resurrect.
+
 # BuffActive
 
 A lightweight, high-performance World of Warcraft addon that monitors your class buffs and displays a reminder when they're missing. Designed to work out-of-combat only, hiding during combat and re-checking on exit.
